@@ -15,12 +15,12 @@ int main(int argc, char *argv[]) {
     return 0;
 }
  
-int commence_par(char *valeure, char *texte){
+int commence_par(char *valeur, char *texte){
     int i;
     int return_var=1;
  
-    for(i=0;i<strlen(valeure);i++){
-        if(valeure[i]!=texte[i]){
+    for(i=0;i<strlen(valeur);i++){
+        if(valeur[i]!=texte[i]){
             return_var=0;
         }
     }

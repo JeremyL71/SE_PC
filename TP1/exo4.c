@@ -6,10 +6,7 @@
 int main(int argc, char *argv[]) {
     int note, total=0;
     double moyenne;
-    int i,j;
-    int isNumber;
-    int length;
-    char *string;
+    int i;
  
     if (argc <=1) {
         printf("Aucune moyenne a calculer\n");
@@ -17,16 +14,8 @@ int main(int argc, char *argv[]) {
     }
  
     for(i=1;i<argc;i++) {
-        string=argv[i];
-        length = strlen(string);
-        isNumber = 1;
-        for(j=0;j<length;j++) {
-            if (!isdigit(string[j])){
-                isNumber = 0;
-            }
-        }
-        note = atoi(string);
-        if (note>=0 && note<=20 && isNumber){
+        int conv = sscanf(argv[i],"%d",&note);
+        if (note>=0 && note<=20 && conv!=0){
             total = total + note;
         } else {
             printf("Notes non valide\n");
