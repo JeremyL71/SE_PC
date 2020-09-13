@@ -1,0 +1,2 @@
+Le caractère '#' indique que c’est le processus fils qui s'exécute 
+Le caractère '$' indique que c’est le processus père qui s’exécute 
