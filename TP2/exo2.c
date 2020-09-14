@@ -1,7 +1,8 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
  
 
 /*
@@ -28,7 +29,7 @@ int main() {
     }
 
     while((pid = wait(&retourExit)) > 0) {
-        printf("Code de retour du fils %d: %d\n", pid, WEXITSTATUS(retourExit));
+        printf("Code de retour du fils %d: WEXITSTATUS:%d\n", pid, WEXITSTATUS(retourExit));
     }
     
     sleep(3);
