@@ -45,3 +45,7 @@ int main() {
       printf("Sortie de la boucle while \n"); close(df1); close(df2);
       return 0;
     }
+
+
+/* réponse: le descripteur de fichier permet de garantir l'indexation de lecteur afin d'éviter une duplication de caractère par les processus, mais ne
+garantie l'ordre d'écriture. on a ainsi une différence entre l'entree et la sortie en termes d'ordre de rangement des caractères.""
