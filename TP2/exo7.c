@@ -1,8 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<sys/types.h>
-#include <fcntl.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
+#include <ctype.h>
 
 /*
 Ecrire un programme C dont le fonctionnement est le suivant :
@@ -18,3 +20,32 @@ Chacun des processus fils Pi réalise le traitement suivant :
     - il se termine par exit (i).
 
 */
+
+int main(int argc, char *argv[]) {
+
+    /* Control du nombre d'argument*/
+    if(argc!=2){
+        printf("Manque le nombre d'itération\n");
+        return 1;
+    }
+
+    pid_t Etat, retourFork, pid_fils;
+    int N = atoi(argv[1]);
+
+    printf("N = %d\n", N);
+
+    for(int i=0; i<N ;i++)
+    {
+        retourFork = fork();
+        printf("Je suis le processus: %d (mon PID), mon Pere est %d (i=%d)\n", getpid(), getppid(), i);
+        if(retourFork == 0){
+            sleep(2*i);
+            exit(i);
+        }
+    }
+    while((pid_fils = wait(&Etat)) > 0) {
+        printf("Code de retour du fils %d: WEXITSTATUS:%d\n", pid_fils, WEXITSTATUS(Etat));
+    }
+    return(0);
+
+} //fin du main

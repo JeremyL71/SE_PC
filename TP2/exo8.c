@@ -20,3 +20,19 @@ int main() {
   printf("Mon nom est %c, j’ai dormi pendant %d secondes\n", 'A' + i, delai);
   exit(0);
 }
+
+/*
+La ligne de  if (fork()) break; au fils d'être générée et de sortir de la boucle.
+
+P
+|  |  |  |
+f1 f2 f3 f4
+
+Mon nom est D, j’ai dormi pendant 0 secondes
+Mon nom est B, j’ai dormi pendant 1 secondes
+Mon nom est A, j’ai dormi pendant 2 secondes
+Mon nom est C, j’ai dormi pendant 2 secondes
+Mon nom est E, j’ai dormi pendant 3 secondes
+
+
+*/
