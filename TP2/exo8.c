@@ -1,8 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include <fcntl.h> 
+#include <string.h>
+#include <sys/wait.h>
 
 /*
 1  Donnez l’arbre généalogique des processus engendrés par ce programme.
@@ -11,22 +13,38 @@
 */
 
 int main() {
-  int i, delai;
-  for (i = 0; i < 4; i++)
-    if (fork()) break;
-  srand(getpid());
-  delai = rand() % 4;
-  sleep(delai);
-  printf("Mon nom est %c, j’ai dormi pendant %d secondes\n", 'A' + i, delai);
-  exit(0);
+    printf("Le shell a pour PID %d\n", getppid());
+    int i, delai;
+
+    /* ne pas toucher */
+    for(i=0; i<4;i++){
+        if(fork()) 
+        {
+            break;
+        }
+    }
+    srand(getpid());
+    delai = rand()%4;
+    sleep(delai);
+    /* ne pas toucher */
+
+    wait(NULL);
+    
+    printf("Mon nom est %c, j’ai dormi pendant %d secondes\n", 'A' + i, delai);
+    printf("Je suis le processus: %d (mon PID), mon Pere est %d\n", getpid(), getppid());
+    exit(0);
 }
 
 /*
-La ligne de  if (fork()) break; au fils d'être générée et de sortir de la boucle.
+La ligne de  if (fork()) break; permet au père de générée un fils qui ne rentrera pas dans la boucle.
 
 P
-|  |  |  |
-f1 f2 f3 f4
+| 
+f1 
+|
+f2
+...
+f4
 
 Mon nom est D, j’ai dormi pendant 0 secondes
 Mon nom est B, j’ai dormi pendant 1 secondes
