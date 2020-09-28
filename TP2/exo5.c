@@ -1,7 +1,7 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include <fcntl.h> 
 
 /*
@@ -13,3 +13,7 @@ compile en simultané puis édite les liens pour produire un exécutable. Ce pro
 • le père doit attendre la terminaison de tous ses fils [de toutes les compilations] ;
 • si l'ensemble des fils ont terminés sans erreur, le père génère un exécutable - Phase d'édition de liens en exécutant gcc -o sur les fichiers.o produits par les fils. 
 */
+
+int main(int argc, char * argv[]) {
+
+}
