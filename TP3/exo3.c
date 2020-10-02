@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     pid_t fork_1, fork_2;
 
     int NombresPairs[2], NombresImpaires[2], SommePairs[2], SommeImpaire[2];
-
+    int nb;
     pipe(NombresImpaires);
     pipe(NombresPairs);
     pipe(SommeImpaire);
@@ -22,20 +22,22 @@ int main(int argc, char *argv[]) {
     if(fork_1 == 0){
         for(int i=0; i< argv[1]; i++){
             srand(time(NULL));   
-            int r = rand();  
-            printf("mon nombre est: %d", r);
-            if(has_even_parity(r)){
+            nb = rand();  
+            printf("mon nombre est: %d", nb);
+            if(has_even_parity(nb)){
                 /* Si le nombre est pair
                 --> fermeture de la sortie de NombrePair et Impaire */
                 close(NombresPairs[0]);
                 close(NombresImpaires[0]);
                 // Fermture des tubes Sommes
-                close(SommeImpaire[0]);
+                // close(SommeImpaire[0]);
                 close(SommeImpaire[1]);
-                close(SommePairs[0]);
+                // close(SommePairs[0]);
                 close(SommePairs[1]);
                 // Fermeture de l'entree nombresImpaire
                 close(NombresImpaires[1]);
+                // Envoi dans le tube
+                write(NombresPairs[1], &nb, sizeof(nb));
             }
             else{
                 /* Si le nombre est impaire
@@ -43,23 +45,40 @@ int main(int argc, char *argv[]) {
                 close(NombresPairs[0]);
                 close(NombresImpaires[0]);
                 // Fermeture des tubes Sommes
-                close(SommeImpaire[0]);
+                // close(SommeImpaire[0]);
                 close(SommeImpaire[1]);
-                close(SommePairs[0]);
+                // close(SommePairs[0]);
                 close(SommePairs[1]);
                 // Fermeture de l'entree nombresPairs
-                close(NombresImpaires[1]);
-                
+                close(NombresPairs[1]);
+                // Envoi dans le tube
+                write(NombresImpaires[1], &nb, sizeof(nb));
             }
         }
         // Envoi du --1 pour les deux tubes
     }
     else if(fork_1 > 0)
     {
-        // Processus filtre pair
+        // Processus FiltrePair
+        
+        // Fermeture des tubes Nombres
+        close(NombresPairs[0]);
+        close(NombresImpaires[0]);
+        close(NombresImpaires[1]);
+        // Fermeture des tubes Sommes
+        close(SommeImpaire[0]);
+        close(SommeImpaire[1]);
+        close(SommePairs[0]);
+        // Réalisation de la somme
+        read(NombresPairs, &nb, sizeof(nb));
+        while(nb == -1){
+
+        }
+        
+
     }
     else(fork_2==0){
-        // Processus filtre impaire
+        // Processus FiltreImpaire
     }
 }
 
