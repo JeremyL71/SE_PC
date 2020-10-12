@@ -1,108 +1,117 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h> 
 #include <time.h>
 
-int check_pair(int x);
-
 int main(int argc, char *argv[]) {
+    int NombresPairs[2], NombresImpairs[2], SommePairs[2], SommeImpairs[2];
+    int pipeNombresPairs, pipeNombresImpairs, pipeSommePairs, pipeSommeImpairs;
+    int FiltrePair,FiltreImpair;
+    int RandomNumber = 0, i = 0, numberSommePairs = 0, numberSommeImpairs = 0;
 
-    pid_t fork_1, fork_2;
+    srand(time(NULL));
 
-    int NombresPairs[2], NombresImpaires[2], SommePairs[2], SommeImpaire[2];
-    int nb , somme_pair, somme_impaire = 0;
-    pipe(NombresImpaires);
-    pipe(NombresPairs);
-    pipe(SommeImpaire);
-    pipe(SommeImpaire);
+    //Création des pipes
+    pipeNombresPairs = pipe(NombresPairs);
+    pipeNombresImpairs = pipe(NombresImpairs);
+    pipeSommePairs = pipe(SommePairs);
+    pipeSommeImpairs = pipe(SommeImpairs);
 
-    fork_1 = fork();
-    fork_2 = fork();
-
-    if(fork_1 == 0){
-        for(int i=0; i<atoi(argv[1]); i++){
-            srand(time(NULL));   
-            nb = rand();  
-            printf("mon nombre est: %d\n", nb);
-            if(check_pair(nb)){
-                /* Si le nombre est pair
-                --> fermeture de la sortie de NombrePair et Impaire */
-                close(NombresPairs[0]);
-                close(NombresImpaires[0]);
-                // Fermture des tubes Sommes
-                close(SommeImpaire[1]);
-                close(SommePairs[1]);
-                // Fermeture de l'entree nombresImpaire
-                close(NombresImpaires[1]);
-                // Envoi dans le tube
-                write(NombresPairs[1], &nb, sizeof(nb));
-            }
-            else{
-                /* Si le nombre est impaire
-                --> fermeture de la sortie de NombrePair et Impaire */
-                close(NombresPairs[0]);
-                close(NombresImpaires[0]);
-                // Fermeture des tubes Sommes
-                close(SommeImpaire[1]);
-                close(SommePairs[1]);
-                // Fermeture de l'entree nombresPairs
-                close(NombresPairs[1]);
-                // Envoi dans le tube
-                write(NombresImpaires[1], &nb, sizeof(nb));
-            }
-        }
-        // Envoi du --1 pour les deux tubes
-        int fin = -1;
-        write(NombresImpaires[1], &fin, sizeof(fin));
-        write(NombresPairs[1], &fin, sizeof(fin));
-        somme_pair = read(SommePairs[0], &somme_pair, sizeof(somme_pair));
-        somme_impaire = read(SommePairs[0], &somme_impaire, sizeof(somme_impaire));
-        int somme_totale = somme_impaire + somme_pair;
-        printf("somme_pair: %d + somme_impaire: %d = somme_totale: %d\n", somme_pair, somme_impaire, somme_totale);
-        exit(0); 
+    if (pipeNombresPairs == -1 || pipeNombresImpairs == -1 || pipeSommePairs == -1 || pipeSommeImpairs == -1) {
+        perror("Erreur création des pipes !");
+        exit(2);
     }
-    else if(fork_1 > 0)
-    {
-        // Processus FiltrePair
-        
-        // Fermeture des tubes Nombres
+
+    //Création des forks
+    FiltrePair=fork();
+
+    if (FiltrePair == -1) {
+        perror("Erreur création du fork FiltrePair !");
+        exit(2);
+    }
+
+    if (FiltrePair != 0) {
+        FiltreImpair=fork();
+
+        if (FiltreImpair == -1) {
+            perror("Erreur création fork FiltreImpair !");
+            exit(2);
+        }
+    }
+
+    //Differents programmes
+    if (FiltrePair == 0) {
+        //Programme de FiltrePair
+        //Fermeture des pipes Impairs + les mauvaises entrées sorties des s Pairs
+        close(NombresImpairs[0]);
+        close(NombresImpairs[1]);
+        close(SommeImpairs[0]);
+        close(SommeImpairs[1]);
+        close(NombresPairs[1]);
+        close(SommePairs[0]);
+
+        //lecture et sommes des receptions jusqu'a recevoir -1
+        while (RandomNumber != -1) {
+            numberSommePairs = numberSommePairs + RandomNumber;
+            read(NombresPairs[0], &RandomNumber, sizeof(RandomNumber));
+            printf("FiltrePair : %d\n", RandomNumber);
+        }
         close(NombresPairs[0]);
-        close(NombresImpaires[0]);
-        close(NombresImpaires[1]);
-        // Fermeture des tubes Sommes
-        close(SommeImpaire[0]);
-        close(SommeImpaire[1]);
-        close(SommePairs[0]);
-        // Réalisation de la somme
-        while(read(NombresPairs[0], &nb, sizeof(nb)) == -1){
-            somme_pair = somme_pair + nb;
-        }
-        write(SommePairs[1], &somme_pair, sizeof(somme_pair));
-        exit(0);
-    }
-    else if(fork_2==0){
-        // Processus FiltreImpaire
-
-         // Fermeture des tubes Nombres
-        close(NombresImpaires[0]);
-        close(NombresImpaires[0]);
-        close(NombresImpaires[1]);
-        // Fermeture des tubes Sommes
-        close(SommeImpaire[0]);
+        write(SommePairs[1],&numberSommePairs, sizeof(numberSommePairs));
         close(SommePairs[1]);
+
+    } else if (FiltreImpair == 0) {
+        //Programme de FiltreImpair
+        //Fermeture des pipes Impairs + les mauvaises entrées sorties des pipes Impairs
+        close(NombresPairs[0]);
+        close(NombresPairs[1]);
         close(SommePairs[0]);
-        // Réalisation de la somme
-        while(read(NombresImpaires[0], &nb, sizeof(nb)) == -1){
-            somme_impaire = somme_impaire + nb;
+        close(SommePairs[1]);
+        close(NombresImpairs[1]);
+        close(SommeImpairs[0]);
+
+        //lecture et sommes des receptions jusqu'a recevoir -1
+        while (RandomNumber != -1) {
+            numberSommeImpairs = numberSommeImpairs + RandomNumber;
+            read(NombresImpairs[0], &RandomNumber, sizeof(RandomNumber));
+            printf("FiltreImpair : %d\n", RandomNumber);
         }
-        write(SommeImpaire[1], &somme_impaire, sizeof(somme_impaire));
-        exit(0);
+        close(NombresImpairs[0]);
+        write(SommeImpairs[1],&numberSommeImpairs, sizeof(numberSommeImpairs));
+        close(SommeImpairs[1]);
+
+    } else {
+        //Programme du Générateur
+        //Fermeture des mauvaises entrées sorties des pipes Pairs et Impairs
+        close(NombresPairs[0]);
+        close(NombresImpairs[0]);
+        close(SommePairs[1]);
+        close(SommeImpairs[1]);
+
+        //Generation des nombre et envoi aux fils
+        for (i=0; i < atoi(argv[1]);i++) {
+            RandomNumber = rand() % 100;
+            printf("Générateur : %d\n", RandomNumber);
+            if (RandomNumber % 2 == 0) {
+                write(NombresPairs[1], &RandomNumber, sizeof(RandomNumber));
+            } else {
+                write(NombresImpairs[1], &RandomNumber, sizeof(RandomNumber));
+            }
+        }
+
+        //Envoi des signaux de fin aux fils et fermeture des connexions d'envoi
+        RandomNumber = -1;
+        write(NombresPairs[1], &RandomNumber, sizeof(RandomNumber));
+        write(NombresImpairs[1], &RandomNumber, sizeof(RandomNumber));
+        close(NombresPairs[1]);
+        close(NombresImpairs[1]);
+
+        read(SommePairs[0], &numberSommePairs, sizeof(&numberSommePairs));
+        read(SommeImpairs[0], &numberSommeImpairs, sizeof(&numberSommeImpairs));
+        //Femeture des connexions de receptions
+        close(SommePairs[0]);
+        close(SommeImpairs[0]);
+
+        printf("Somme des Pairs : %d\nSomme des Impairs : %d\nSomme Totale : %d\n", numberSommePairs, numberSommeImpairs, numberSommePairs+numberSommeImpairs);
     }
-}
-
-
-int check_pair(int x){
-    if(x%2)return 1;
-    else return 0;
 }
