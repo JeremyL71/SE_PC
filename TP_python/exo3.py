@@ -1,4 +1,5 @@
 import sys
+
 infile = open(sys.argv[1], 'r')
 lines = 0
 words = 0
