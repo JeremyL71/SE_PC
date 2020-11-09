@@ -1,5 +1,5 @@
 import random
-import names as random_name
+import namegenerator
 
 
 def exo(N: int):
@@ -7,7 +7,7 @@ def exo(N: int):
 
         def __init__(self, name=None, age=None, list_note=None):
             if name is None:
-                self.name = random_name
+                self.name = namegenerator.gen()
             else:
                 self.name = name
             if age is None:
@@ -34,7 +34,7 @@ def exo(N: int):
         user_list = []
         while i < N:
             user_list.append(
-                user(random_name))
+                user())
             i=i+1
         return user_list
 
