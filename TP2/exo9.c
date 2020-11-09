@@ -20,8 +20,31 @@ int main(int argc, char * argv[]) {
   int i, pid1, pid2;
   for (i = 0; i < N; i++) {
     /* __________debut des ajouts__________ */
+    int a,b,c= 0;
+    if (fork())
+    {
+      if(fork())
+      {
+        printf("Bonjour\n");
+        a++;
+      }
+    }
+    if (fork())
+    {
+      if(!fork())
+      {
+        printf("Bonjour\n");
+        b++;
+      }
+    }
+    c =a+b;
+    printf("c = %d", c);
     /* __________fin des ajouts__________ */
   }
   printf("Bonjour\n");
   return 0;
 }
+
+/*
+2^(n*2) = 4^n
+*/
