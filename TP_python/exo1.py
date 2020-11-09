@@ -1,18 +1,14 @@
-
-
-def exo(int N):
+def exo(N: int):
+    chaine=""
     i=1
-    while i<n:
-        print(i+"\n")
-        construction(i, istr(num))
+    while i<N:
+        print(chaine)
+        chaine = construction(str(i), chaine)
+        i=i+1
 
-
-
-def construction(int i, str(num) chaine):
-    i=i+1
-    chaine+i
+def construction(i: int, chaine: str):
+    chaine= chaine+i
     return chaine
-
 
 if __name__ == '__main__':
     # Local test
