@@ -35,19 +35,51 @@ def exo(N: int):
         while i < N:
             user_list.append(
                 user())
-            i=i+1
+            i = i+1
         return user_list
 
-    print("Start main")
-    user_list = create_N_user(N)
+    def all_notes(user_list: list):
+        total_list_note = []
+        NB_USER = len(user_list)
+        index_user = 0
+        while index_user < NB_USER:
+            index_note = 0
+            NB_note_current_user = len(user_list[index_user].list_note)
+            while index_note < NB_note_current_user:
+                total_list_note.append(
+                    user_list[index_user].list_note[index_note])
+                index_note = index_note + 1
+            index_user = index_user + 1
+        return total_list_note
 
-    for user in user_list:
-        print(f"user: ", user.name)
+    def compute_general_average(user_list: list):
+        total_list_note = all_notes(user_list)
+        print(f"NB_notes: {len(total_list_note)}")
+        print(f"sum of notes : {sum(total_list_note)}")
+        average = sum(total_list_note) / len(total_list_note)
+        return average
+
+    def lower_note(user_list: list):
+        total_list_note = all_notes(user_list)
+        lower_note = min(total_list_note)
+        return lower_note
     
+    def highest_note(user_list: list):
+        total_list_note = all_notes(user_list)
+        highest_note = max(total_list_note)
+        return highest_note
+
+    print("Start main")
+
+    user_list = create_N_user(N)
+    print(f"Moyenne de la classe: {compute_general_average(user_list)}")
+    print(f"Plus petite note: {lower_note(user_list)}")
+    print(f"Plus grande note: {highest_note(user_list)}")
+
     print("End main")
 
 
 if __name__ == '__main__':
     # Local test
-    N = 3
+    N = 10
     exo(N)
