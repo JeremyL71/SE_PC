@@ -1,19 +1,20 @@
-#include <pthread.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
 #include <stdio.h>
-#define MAX 100000
+#include <stdlib.h>
 
-int counter = 0;
+#define CLE 123
+int main(){
+    int semid;
 
-void* count(void* data) {
-    int i;
-    for (i = 0; i < MAX; i++) counter++;
-}
-
-int main () {
-    pthread_t t1, t2;
-    pthread_create(&t1, NULL, count, NULL); // create first thread
-    pthread_create(&t2, NULL, count, NULL); // create second thread
-    pthread_join(t1, NULL); // wait for first thread
-    pthread_join(t2, NULL); // wait for second thread
-    printf("Counter: %d\n", counter);
+    /* Création de 4 sémaphore */
+    if ( (semid = semget( (key_t)CLE, 4, IPC_CREAT | IPC_EXCL | 0666)) == -1){
+        perror("Echec de semget");
+        exit(1);
+    }
+    printf("le semid de l'emsemble de semaphoreest :%d\n", semid);
+    printf(" cet ensemble est identifie par la cle unique : %d\n" , (key_t)CLE) ;
+    return 0;
 }
