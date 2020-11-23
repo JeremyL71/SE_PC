@@ -4,7 +4,6 @@ import namegenerator
 
 def exo(N: int):
     class user(object):
-
         def __init__(self, name=None, age=None, list_note=None):
             if name is None:
                 self.name = namegenerator.gen()
@@ -33,9 +32,8 @@ def exo(N: int):
         i = 0
         user_list = []
         while i < N:
-            user_list.append(
-                user())
-            i = i+1
+            user_list.append(user())
+            i = i + 1
         return user_list
 
     def all_notes(user_list: list):
@@ -46,8 +44,7 @@ def exo(N: int):
             index_note = 0
             NB_note_current_user = len(user_list[index_user].list_note)
             while index_note < NB_note_current_user:
-                total_list_note.append(
-                    user_list[index_user].list_note[index_note])
+                total_list_note.append(user_list[index_user].list_note[index_note])
                 index_note = index_note + 1
             index_user = index_user + 1
         return total_list_note
@@ -63,7 +60,7 @@ def exo(N: int):
         total_list_note = all_notes(user_list)
         lower_note = min(total_list_note)
         return lower_note
-    
+
     def highest_note(user_list: list):
         total_list_note = all_notes(user_list)
         highest_note = max(total_list_note)
@@ -79,7 +76,7 @@ def exo(N: int):
     print("End main")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Local test
     N = 10
     exo(N)
