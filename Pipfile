@@ -7,6 +7,8 @@ name = "pypi"
 names = "*"
 namegenerator = "*"
 zen = "*"
+black = "*"
+flake8 = "*"
 
 [dev-packages]
 names = "*"

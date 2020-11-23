@@ -41,6 +41,7 @@ CL_LIGHTCYAN="\033[01;36m" # Cyan clair
 CL_WHITE="\033[01;37m" # Blanc
 
 #−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+from multiprocessing import Process
 import multiprocessing as mp
 import os, time,math, random, sys, ctypes
 LONGEUR_COURSE = 100 # Tout le monde aura la même copie (donc no need to have a ’value’)
