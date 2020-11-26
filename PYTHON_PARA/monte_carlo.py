@@ -1,7 +1,6 @@
 import random, time, sys
 import multiprocessing
 from multiprocessing import Pool
-import time
 
 # calculer le nbr de hits dans un cercle unitaire (utilisé par les différentes méthodes)
 def monte_carlo_pi_part(nb_iteration):
@@ -23,7 +22,7 @@ if __name__ == "__main__":
     np = multiprocessing.cpu_count()
     print("You have {0:1d} CPUs".format(np))
     # Nummber of points to use for the Pi estimation
-    n = 10000000
+    n = 100000000
     # iterable with a list of points to generate in each worker
     # each worker process gets n/np number of points to calculate Pi from
     part_count = [n / np] * np
@@ -32,7 +31,7 @@ if __name__ == "__main__":
     pool = Pool(processes=np)
     # parallel map
     count = pool.map(monte_carlo_pi_part, part_count)
-    print("Esitmated value of Pi:: ", sum(count) / (n * 1.0) * 4)
+    print("Estimated value of Pi:: ", sum(count) / (n * 1.0) * 4)
     print("--- %s seconds ---" % (time.time() - start_time))
     temps_multi = time.time() - start_time
 
@@ -41,11 +40,10 @@ if __name__ == "__main__":
     print("Debut du temps monoprocess !")
 
     start_time = time.time()
-    nb_total_iteration = 10000000
-    nb_hits = monte_carlo_pi_part(nb_total_iteration)
+    nb_hits = monte_carlo_pi_part(n)
     print(
         "Valeur estimée Pi par la méthode Mono−Processus : ",
-        4 * nb_hits / nb_total_iteration,
+        4 * nb_hits / n,
     )
     print("--- %s seconds ---" % (time.time() - start_time))
     temps_mono = time.time() - start_time
@@ -55,13 +53,14 @@ if __name__ == "__main__":
     print(f"difference: {abs(temps_multi-temps_mono)}")
 
     if len(sys.argv) < 2:
-        print("penser a ajout le nom de processus en argument en appelant le programme")
+        print(
+            "penser a ajout le nombre de processus en argument en appelant le programme"
+        )
     else:
         print(f"Debut du temps multiprocess avec: {int(sys.argv[1])} processus")
 
         start_time = time.time()
         # Nummber of points to use for the Pi estimation
-        n = 10000000
         # iterable with a list of points to generate in each worker
         # each worker process gets n/np number of points to calculate Pi from
         part_count = [n / int(sys.argv[1])] * int(sys.argv[1])

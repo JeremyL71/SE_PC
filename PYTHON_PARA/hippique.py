@@ -99,7 +99,7 @@ def en_rouge():
 
 
 # La tache d’un cheval
-def un_cheval(ma_ligne: int):  # ma_ligne commence à 0
+def un_cheval(ma_ligne: int, positions: list):  # ma_ligne commence à 0
     col = 1
     while col < LONGEUR_COURSE and keep_running.value:
         move_to(ma_ligne + 1, col)  # pour effacer toute ma ligne
@@ -108,6 +108,32 @@ def un_cheval(ma_ligne: int):  # ma_ligne commence à 0
         print("(" + chr(ord("A") + ma_ligne) + ">")
         col += 1
         time.sleep(0.1 * random.randint(1, 5))
+        positions[ma_ligne] = col
+
+
+def arbitre(positions: list):
+    while True:
+        ind_max = [0]
+        for i in range(len(positions)):
+            move_to(25, 1)
+            if positions[i] > positions[ind_max[0]]:
+                ind_max = [i]
+                print(f"Le cheval {chr(ord('A')+ind_max[0])} est en tete                                              ")
+            elif positions[i] == positions[ind_max[0]] and i not in ind_max:
+                ind_max.append(i)
+                txt = ""
+                for ind in ind_max:
+                    txt = txt + chr(ord("A") + ind) + ","
+                print(f"Les chevaux {txt[:-1]} sont en tete                                              ")
+        if positions[ind_max[0]] == LONGEUR_COURSE:
+            move_to(25, 1)
+            if len(positions) == 1:
+                print(f"Le cheval {chr(ord('A') + ind_max[0])} à gagné la course")
+            else:
+                for ind in ind_max:
+                    txt = txt + chr(ord("A") + ind) + ","
+                print(f"Les chevaux {txt[:-1]} ont gagné la course")
+            break
 
 
 # −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
@@ -115,20 +141,34 @@ def un_cheval(ma_ligne: int):  # ma_ligne commence à 0
 def course_hippique():
     Nb_process = 20
     mes_process = [0 for i in range(Nb_process)]
+    positions = mp.Array("i", Nb_process)
+    for i in range(len(positions)):
+        positions[i] = 0
+    # positions[:]=mes_process
 
     effacer_ecran()
     curseur_invisible()
 
     for i in range(Nb_process):  # Lancer Nb_process processus
-        mes_process[i] = Process(target=un_cheval, args=(i,))
+        mes_process[i] = Process(
+            target=un_cheval,
+            args=(
+                i,
+                positions,
+            ),
+        )
         mes_process[i].start()
 
     move_to(Nb_process + 10, 1)
     print("tous lancés")
 
+    arbitre_process = Process(target=arbitre, args=(positions,))
+    arbitre_process.start()
+
     for i in range(Nb_process):
         mes_process[i].join()
-    move_to(24, 1)
+    arbitre_process.join()
+    move_to(Nb_process + 11, 1)
     curseur_visible()
     print("Fini")
 
