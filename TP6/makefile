@@ -10,7 +10,7 @@ $(SRC_O)Dijkstra.o:$(SRC_C)Dijkstra.c $(SRC_C)Dijkstra.h
 	$(CC) $(OPTIONS) -c $(SRC_C)Dijkstra.c -o $(SRC_O)Dijkstra.o
 
 # Exo 1 ================================================
-exo1:exo1_create_sem exo1_delete_sem exo1_1 exo1_2
+exo1:exo1_1 exo1_2 exo1_create_sem exo1_delete_sem
 
 exo1_create_sem:$(SRC_O)exo1_create_sem.o $(SRC_O)Dijkstra.o
 	$(CC) $(OPTIONS) -o exo1_create_sem $(SRC_O)exo1_create_sem.o $(SRC_O)Dijkstra.o
@@ -37,7 +37,7 @@ $(SRC_O)exo1_2.o:$(SRC_C)exo1_2.c $(SRC_C)Dijkstra.h
 	$(CC) $(OPTIONS) -c $(SRC_C)exo1_2.c -o $(SRC_O)exo1_2.o
 
 # Exo 2 ================================================
-exo2:exo2_1 exo2_2 exo2_3
+exo2:exo2_1 exo2_2 exo2_3 exo2_create_sem exo2_delete_sem
 
 exo2_create_sem:$(SRC_O)exo2_create_sem.o $(SRC_O)Dijkstra.o
 	$(CC) $(OPTIONS) -o exo2_create_sem $(SRC_O)exo2_create_sem.o $(SRC_O)Dijkstra.o
