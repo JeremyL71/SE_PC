@@ -9,6 +9,7 @@ namegenerator = "*"
 zen = "*"
 black = "*"
 flake8 = "*"
+pillow = "*"
 
 [dev-packages]
 names = "*"
