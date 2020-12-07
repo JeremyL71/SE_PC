@@ -134,6 +134,27 @@ def put_pixel(matrice_pixels: list, coord_x: int, coord_y: int, data_color: dict
     return matrice_pixels
 
 
+def mesures_std_et_mu(
+    matrice: list,
+    cornet_x: int,
+    corner_y: int,
+    width_region: int,
+    height_region: int,
+):
+    dict_sum_color = average_color_region(
+        matrice, first_coord_x, first_coord_y, width_region, height_region
+    )
+    sum_red2, sum_green2, sum_blue2 = 0.0, 0.0, 0.0
+
+    for pixel_x in range(cornet_x, cornet_x + width_region):
+        for pixel_y in range(corner_y, corner_y + height_region):
+            red, green, blue 
+    
+    area = (width_region * height_region) * 1.0
+    red, green, blue = 0,0,0
+    r = sqrt(abs(su))
+
+
 def put_region(
     matrice_pixels: list,
     width_region: int,
