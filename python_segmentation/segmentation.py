@@ -1,5 +1,6 @@
 from PIL import Image  # Importation de la librairie d'image PIL
 import random
+import math
 
 
 def random_pixel_value():
@@ -141,6 +142,7 @@ def mesures_std_et_mu(
     width_region: int,
     height_region: int,
 ):
+    """ Calcul de l'écart type des couleurs d'une région de l'image."""
     dict_sum_color = average_color_region(
         matrice, first_coord_x, first_coord_y, width_region, height_region
     )
@@ -148,11 +150,27 @@ def mesures_std_et_mu(
 
     for pixel_x in range(cornet_x, cornet_x + width_region):
         for pixel_y in range(corner_y, corner_y + height_region):
-            red, green, blue 
-    
-    area = (width_region * height_region) * 1.0
-    red, green, blue = 0,0,0
-    r = sqrt(abs(su))
+            dict_pixel_color = Get_dict_pixel_color(matrice, pixel_x, pixel_y)
+            sum_red2 += dict_pixel_color["red_value"] ** 2
+            sum_green2 += dict_pixel_color["green_value"] ** 2
+            sum_blue2 += dict_pixel_color["blue_value"] ** 2
+
+    area = width_region * height_region
+    red = math.sqrt(abs(sum_red2 / area - dict_sum_color["sum_red"]))
+    green = math.sqrt(abs(sum_green2 / area - dict_sum_color["sum_green"]))
+    blue = math.sqrt(abs(sum_blue2 / area - dict_sum_color["sum_blue"]))
+
+    result = (
+        (
+            dict_sum_color["sum_red"],
+            dict_sum_color["sum_green"],
+            dict_sum_color["sum_blue"],
+        ),
+        (red + blue + green) / 3.0,
+    )
+    return result
+
+def Decoupage_en_4(coord_x: int, coord_y: int)
 
 
 def put_region(
