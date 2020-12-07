@@ -4,8 +4,7 @@ import multiprocessing as mp
 n_max_marble = 10
 n_process = 4;
 
-lock_get_marble = mp.Semaphore(1)
-lock_giveback_marble = mp.Semaphore(1)
+lock_marble = mp.Semaphore(1)
 n_marble_remaining = mp.Array("i",1)
 
 def worker(k_marble, m_iteration, n_marble_remaining):
@@ -20,10 +19,8 @@ def worker(k_marble, m_iteration, n_marble_remaining):
 
 def get(k_marble,n_marble_remaining):
     lock_marble.acquire()
-    print(f"{k_marble} <= {n_marble_remaining[0]}")
     if k_marble <= n_marble_remaining[0]:
         n_marble_remaining[0] = n_marble_remaining[0] - k_marble
-        break
     lock_marble.release()
 
 def giveback(k_marble,n_marble_remaining):
