@@ -104,52 +104,6 @@ def put_pixel(matrice_pixels: list, coord_x: int, coord_y: int, data_color: dict
     return matrice_pixels
 
 
-def all_pixel_access(
-    image: object,
-    matrice_pixels: list,
-    size_data: dict,
-    coord_x: int,
-    coord_y: int,
-    data_color: dict,
-):
-    """path of the image matrix.
-
-    # To create a new image:
-        Image.new(mode, size, color=0)
-
-        Parameters:
-        mode – The mode to use for the new image. See: Modes.
-        size – A 2-tuple, containing (width, height) in pixels.
-        color – What color to use for the image.
-        Default is black.
-        If given, this should be a single integer or floating point value
-        for single-band modes, and a tuple for multi-band modes
-        (one value per band). When creating RGB images,
-        you can also use color strings as supported by
-        the ImageColor module.
-        If the color is None, the image is not initialised.
-    # -----------------------
-    """
-    print("Start put_region")
-
-    new_list_pixel = []
-
-    for pixel_x in range(coord_x, coord_x + size_data["width"]):
-        for pixel_y in range(coord_y, coord_x + size_data["height"]):
-
-            data_color = random_data_color()
-
-            new_pixel = put_pixel(matrice_pixels, pixel_x, pixel_y, data_color)
-            new_list_pixel.append(new_pixel)
-
-    print("create the new image")
-    new_image = Image.new(image.mode, image.size)
-    new_image.putdata(new_list_pixel)
-
-    print("End put_region")
-    return new_image
-
-
 def put_region(
     matrice_pixels: list,
     width_region: int,
