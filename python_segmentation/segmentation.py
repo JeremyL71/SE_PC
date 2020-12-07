@@ -35,7 +35,7 @@ def get_width_height(image: object):
     return size_data
 
 
-def Get_r_g_b_t(matrice_pixels: list, coord_x: int, coord_y: int):
+def Get_dict_pixel_color(matrice_pixels: list, coord_x: int, coord_y: int):
     """Get value of Red, Green, Blue, transparency" from pixel into a dict.
 
     example:
@@ -46,17 +46,17 @@ def Get_r_g_b_t(matrice_pixels: list, coord_x: int, coord_y: int):
         "transparency_value"": 255,
     }
     """
-    print("Start Get_r_g_b_t")
+    print("Start Get_dict_pixel_color")
     tuple_r_g_b_t = matrice_pixels[coord_x, coord_y]
-    r_g_b_t_data = {
+    dict_pixel_color = {
         "red_value": tuple_r_g_b_t[0],
         "green_value": tuple_r_g_b_t[1],
         "blue_value": tuple_r_g_b_t[2],
         "transparency_value": tuple_r_g_b_t[3],
     }
-    print(f"r_g_b_t_data: {r_g_b_t_data}")
-    print("End Get_r_g_b_t")
-    return r_g_b_t_data
+    print(f"dict_pixel_color: {dict_pixel_color}")
+    print("End Get_dict_pixel_color")
+    return dict_pixel_color
 
 
 def create_matrice_pixels(image: object):
@@ -90,17 +90,47 @@ def save_image(image: object, file_name: str):
     print("End save_image")
 
 
+def average_color_region(
+    matrice_pixels: list,
+    cornet_x: int,
+    corner_y: int,
+    width_region: int,
+    height_region: int,
+):
+    """Return average color pixems"""
+    print("Start average_color_region")
+    sum_red, sum_green, sum_blue = 0, 0, 0
+    area = width_region * height_region
+
+    for pixel_x in range(cornet_x, cornet_x + width_region):
+        for pixel_y in range(corner_y, corner_y + height_region):
+            dict_pixel_color = Get_dict_pixel_color(matrice_pixels, pixel_x, pixel_y)
+            sum_red += dict_pixel_color["red_value"]
+            sum_green += dict_pixel_color["green_value"]
+            sum_blue += dict_pixel_color["blue_value"]
+
+    sum_red /= area
+    sum_green /= area
+    sum_blue /= area
+
+    dict_sum_color = {
+        "sum_red": sum_red,
+        "sum_green": sum_green,
+        "sum_blue": sum_blue,
+    }
+    print("End average_color_region")
+    return dict_sum_color
+
+
 def put_pixel(matrice_pixels: list, coord_x: int, coord_y: int, data_color: dict):
     """Change value of RGB and transparency pixel.
     return matrice_pixels modified"""
-    print("Start put_pixel")
     matrice_pixels[coord_x, coord_y] = (
         int(data_color["red_value"]),
         int(data_color["green_value"]),
         int(data_color["blue_value"]),
         int(data_color["transparency_value"]),
     )
-    print("End put_pixel")
     return matrice_pixels
 
 
@@ -112,7 +142,27 @@ def put_region(
     first_coord_y: int,
     data_color: dict,
 ):
-    """put color data into a region"""
+    """put color data into a region
+
+    example:
+
+         1 2 3 4 5 6 7 coord_x
+      1 ├─────────────│
+      2 |             │
+      3 |  x x x x    │
+      4 |  x x x x    │
+      5 |             │
+      6 |             │
+      7 |             │
+      8 |             │
+        └─────────────│
+    coord_y
+
+    width_region = 4
+    height_region = 2
+    first_coord_x = 2
+    first_coord_y = 3
+    """
     print("Start put_region")
 
     for pixel_x in range(first_coord_x, first_coord_x + width_region):
@@ -136,8 +186,18 @@ if __name__ == "__main__":
     first_coord_y = 25
     data_color = random_data_color()
 
-    put_region(matrice, width_region, height_region, first_coord_x, first_coord_y, data_color)
+    dict_average_color = average_color_region(
+        matrice, first_coord_x, first_coord_y, width_region, height_region
+    )
+    print(f"dict_average_color: {dict_average_color}")
 
+    put_region(
+        matrice, width_region, height_region, first_coord_x, first_coord_y, data_color
+    )
+
+    put_region(
+        matrice, width_region, height_region, first_coord_x, first_coord_y, data_color
+    )
     save_image(image, "save_me")
 
     print("End main")
