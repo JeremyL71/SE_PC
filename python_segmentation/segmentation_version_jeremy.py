@@ -120,7 +120,7 @@ def average_color_region(
         "sum_red": sum_red,
         "sum_green": sum_green,
         "sum_blue": sum_blue,
-        "sum_transparency": sum_transparency
+        "sum_transparency": sum_transparency,
     }
     print("End average_color_region")
     return dict_sum_color
@@ -165,14 +165,16 @@ def mesures_std_et_mu(
     red = math.sqrt(abs(sum_red2 / area - dict_sum_color["sum_red"]))
     green = math.sqrt(abs(sum_green2 / area - dict_sum_color["sum_green"]))
     blue = math.sqrt(abs(sum_blue2 / area - dict_sum_color["sum_blue"]))
-    transparency = math.sqrt(abs(sum_transparency / area - dict_sum_color["sum_transparency"]))
+    transparency = math.sqrt(
+        abs(sum_transparency / area - dict_sum_color["sum_transparency"])
+    )
 
     result = (
         (
             dict_sum_color["sum_red"],
             dict_sum_color["sum_green"],
             dict_sum_color["sum_blue"],
-            dict_sum_color["sum_transparency"]
+            dict_sum_color["sum_transparency"],
         ),
         (red + blue + green + transparency) / 4.0,
     )
@@ -295,7 +297,7 @@ if __name__ == "__main__":
     matrice = create_matrice_pixels(image)
     size_data = get_width_height(image)
     print_image(image)
-    threshold_alpha = 2
+    threshold_alpha = 1
 
     Decoupage_en_4(
         matrice, 0, 0, size_data["width"], size_data["height"], threshold_alpha
