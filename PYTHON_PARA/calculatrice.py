@@ -2,7 +2,7 @@ import os, time, random
 import multiprocessing as mp
 
 
-def fils_calculette(cmd: str,ret: list):
+def fils_calculette(cmd: str, ret: list):
     print(f"Bonjour du Fils: {os.getpid()}")
     print("Le fils a recu ", cmd)
     res = eval(cmd)
@@ -19,7 +19,13 @@ if __name__ == "__main__":
         opd2 = random.randint(1, 10)
         operateur = random.choice(["+", "-", "*", "/"])
         str_commande = str(opd1) + operateur + str(opd2)
-        fils = mp.Process(target=fils_calculette, args=(str_commande.encode(),res,))
+        fils = mp.Process(
+            target=fils_calculette,
+            args=(
+                str_commande.encode(),
+                res,
+            ),
+        )
         fils.start()
         print("Le père va demander à faire : ", str_commande)
         fils.join()

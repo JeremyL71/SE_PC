@@ -50,7 +50,7 @@ LONGEUR_COURSE = (
 )
 keep_running = mp.Value(ctypes.c_bool, True)
 
-lock_affichage= mp.Semaphore(1)
+lock_affichage = mp.Semaphore(1)
 
 # Une liste de couleurs à affecter aléatoirement aux chevaux
 lyst_colors = [
@@ -123,7 +123,9 @@ def arbitre(positions: list, predictions: list):
             if positions[i] > positions[ind_max[0]]:
                 ind_max = [i]
                 lock_affichage.acquire()
-                print(f"Le cheval {chr(ord('A')+ind_max[0])} est en tete                                              ")
+                print(
+                    f"Le cheval {chr(ord('A')+ind_max[0])} est en tete                                              "
+                )
                 lock_affichage.release()
             elif positions[i] == positions[ind_max[0]] and i not in ind_max:
                 ind_max.append(i)
@@ -131,7 +133,9 @@ def arbitre(positions: list, predictions: list):
                 for ind in ind_max:
                     txt = txt + chr(ord("A") + ind) + ","
                 lock_affichage.acquire()
-                print(f"Les chevaux {txt[:-1]} sont en tete                                              ")
+                print(
+                    f"Les chevaux {txt[:-1]} sont en tete                                              "
+                )
                 lock_affichage.release()
         if positions[ind_max[0]] == LONGEUR_COURSE:
             move_to(25, 1)
@@ -147,10 +151,15 @@ def arbitre(positions: list, predictions: list):
                 lock_affichage.release()
             move_to(26, 1)
             if predictions[0] in ind_max:
+                lock_affichage.acquire()
                 print("Vous avez gagné votre prediction")
+                lock_affichage.release()
             else:
+                lock_affichage.acquire()
                 print("Vous avez perdu votre prediction")
+                lock_affichage.release()
             break
+
 
 # −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
 # La partie principale :
@@ -179,7 +188,13 @@ def course_hippique():
     move_to(Nb_process + 10, 1)
     print("tous lancés")
 
-    arbitre_process = Process(target=arbitre, args=(positions,predictions,))
+    arbitre_process = Process(
+        target=arbitre,
+        args=(
+            positions,
+            predictions,
+        ),
+    )
     arbitre_process.start()
 
     move_to(30, 1)
@@ -190,7 +205,6 @@ def course_hippique():
     lock_affichage.acquire()
     print(f"Vous avez pariez sur {input_prediction}")
     lock_affichage.release()
-
 
     for i in range(Nb_process):
         mes_process[i].join()
