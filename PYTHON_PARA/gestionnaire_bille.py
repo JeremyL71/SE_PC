@@ -9,6 +9,7 @@ n_marble_remaining = mp.Array("i", 1)
 
 
 def worker(k_marble: int, m_iteration: int, n_marble_remaining: list):
+    """Create worker. Worker get and giveback marble"""
     for i in range(1, m_iteration + 1):
         print(
             f"[Worker {os.getpid()}] Worker with {k_marble} marble, iteration {i} of {m_iteration}"
@@ -22,6 +23,7 @@ def worker(k_marble: int, m_iteration: int, n_marble_remaining: list):
 
 
 def get(k_marble: int, n_marble_remaining: list):
+    """Get marble in share array, if worker can't, it wait."""
     test = True
     while test:
         lock_marble.acquire()
@@ -33,6 +35,7 @@ def get(k_marble: int, n_marble_remaining: list):
 
 
 def giveback(k_marble: int, n_marble_remaining: list):
+    """Giveback marble in share array, if worker can't, it wait."""
     lock_marble.acquire()
     print(f"[giveback]  {n_marble_remaining[0]} + {k_marble}")
     n_marble_remaining[0] = n_marble_remaining[0] + k_marble
@@ -40,6 +43,7 @@ def giveback(k_marble: int, n_marble_remaining: list):
 
 
 def controller(n_marble_remaining: list):
+    """Check get and giveback operation."""
     while True:
         if 0 <= n_marble_remaining[0] <= n_max_marble:
             print(f"[Controler] There is {n_marble_remaining[0]} marble available")
@@ -51,7 +55,7 @@ def controller(n_marble_remaining: list):
 
 
 if __name__ == "__main__":
-    print(f"[main] Start of Program")
+    print("[main] Start of Program")
     process = [0 for i in range(n_process)]
     n_marble_remaining[0] = n_max_marble
     print(n_marble_remaining)
@@ -74,4 +78,5 @@ if __name__ == "__main__":
         process[i].join()
 
     controller_process.terminate()
-    print(f"[main] End of Program")
+    print(f"[main] There is {n_marble_remaining[0]} marble at the end")
+    print("[main] End of Program")
